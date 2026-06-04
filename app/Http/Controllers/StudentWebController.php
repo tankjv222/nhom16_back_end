@@ -65,23 +65,6 @@ class StudentWebController extends Controller
         return view('student.dashboard', compact('student','attendances'));
     }
 
-    public function qrCheckIn(Request $request)
-    {
-        $student = $this->currentStudent($request);
-        if (!$student) return redirect()->route('student.login');
-
-        $request->validate(['event_id' => 'required']);
-
-        $attendance = Attendance::create([
-            'student_id' => $student->id,
-            'event_id' => $request->event_id,
-            'method' => 'qr',
-            'meta' => ['qrcode' => $student->qrcode_token],
-        ]);
-
-        return back()->with('status', 'Điểm danh bằng QR thành công');
-    }
-
     public function imageCheckIn(Request $request, AwsRekognitionService $rek)
     {
         $student = $this->currentStudent($request);
@@ -100,6 +83,10 @@ class StudentWebController extends Controller
             'confidence' => $result['confidence'] ?? null,
             'meta' => $result,
         ]);
+
+        if ($request->expectsJson()) {
+            return response()->json(['message' => 'Image processed', 'confidence' => $result['confidence'] ?? null, 'rekognition' => $result]);
+        }
 
         return back()->with('status', 'Ảnh đã được gửi, kết quả: '.($result['confidence'] ?? 'N/A'));
     }

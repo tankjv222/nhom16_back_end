@@ -21,18 +21,8 @@ class AttendanceController extends Controller
 
     public function qrCheckIn(Request $request)
     {
-        $request->validate(['event_id' => 'required']);
-        $student = $this->guardStudent($request);
-        if (!$student) return response()->json(['message' => 'Unauthenticated'], 401);
-
-        $attendance = Attendance::create([
-            'student_id' => $student->id,
-            'event_id' => $request->event_id,
-            'method' => 'qr',
-            'meta' => ['qrcode' => $student->qrcode_token],
-        ]);
-
-        return response()->json(['message' => 'Checked in', 'attendance' => $attendance]);
+        // QR check-in removed; endpoint deprecated.
+        return response()->json(['message' => 'QR check-in is disabled'], 410);
     }
 
     public function imageCheckIn(Request $request, AwsRekognitionService $rek)

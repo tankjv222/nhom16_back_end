@@ -25,13 +25,11 @@ class AwsRekognitionService
 
     public function compareWithStudentImage(Student $student, string $filePath): array
     {
-        // If no AWS client or no student photo, fallback to mock result
         if (!$this->client || !$student->photo_url) {
             return ['ok' => true, 'confidence' => 95.0, 'message' => 'Mock compare (no AWS configured or no student photo)'];
         }
 
         try {
-            // Determine if student photo is on S3 (s3://, s3.amazonaws, or typical S3 URL)
             $sourceImage = null;
             $photo = $student->photo_url;
 
@@ -53,7 +51,6 @@ class AwsRekognitionService
                 }
             }
 
-            // If we didn't detect an S3 object, attempt to read bytes from local path or URL
             if (!$sourceImage) {
                 // If the photo is a URL, fetch it
                 if (preg_match('#^https?://#i', $photo)) {

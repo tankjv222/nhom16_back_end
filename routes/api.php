@@ -8,7 +8,6 @@ use App\Http\Controllers\Api\AttendanceController;
 
 Route::post('/student/login', [StudentAuthController::class, 'login']);
 
-Route::post('/attendance/qr', [AttendanceController::class, 'qrCheckIn']);
 Route::post('/attendance/image', [AttendanceController::class, 'imageCheckIn']);
 
 Route::get('/ping', function () { return ['status' => 'ok']; });
